@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import WheelPicker from 'react-native-wheely';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Axios from 'axios';
+import axios from 'axios';
+import cars from '../carInfo.json';
 
 
 const MainScreen = () => {
@@ -15,29 +16,12 @@ const MainScreen = () => {
   const [selectedCarIndex, setCarIndex] = useState(0);
   const [isSuccess, setSuccess] = useState(false);
 
-  const url = '"http://example.com/movies.json"';
-
-  /* const getCarsFromAPI = async () => {
-    await fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => setCarData(responseJson))
-    .catch((error) => console.error(error));
-  } */
-
-  async function logMovies(){
-    const response = await fetch("https://dummyjson.com/products");
-    const cars = await response.json();
-    setCarData(response.json);
-  }
 
   useEffect(() => {
-    Axios.get('https://raw.githubusercontent.com/FormidableLabs/radon-typeahead/master/demo/car-models.json')
-    .then((response) => {
-        const fetchedOptions = response.data;
-        setCarData(fetchedOptions);
-        setSuccess(true);
-        console.log(fetchedOptions)
-    })
+    result = []
+    cars.map((elem) => result.push(elem.brand))
+    setCarData(result)
+    setSuccess(true)
   }, []);
 
 
@@ -73,7 +57,7 @@ const MainScreen = () => {
 
       <DateTimePicker value={date} mode='datetime' />
 
-      { isSuccess===true && <WheelPicker selectedIndex={selectedCarIndex} options={carData} 
+      { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={carData} 
       onChange={(index) => setCarIndex(index)} />}
 
       <WheelPicker selectedIndex={selectedStateIndex} options={stateArr}
@@ -112,6 +96,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
   }
+
+
+})
 
 
 })
