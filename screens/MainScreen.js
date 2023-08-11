@@ -1,9 +1,11 @@
-import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { Modal, Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import WheelPicker from 'react-native-wheely';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { BottomSheetModal,BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import states from '../states.json';
 import cars from '../carInfo.json';
 
 
@@ -16,10 +18,15 @@ const MainScreen = () => {
   const [selectedCarIndex, setCarIndex] = useState(0);
   const [isSuccess, setSuccess] = useState(false);
 
+  const [carTypeIndex, setCarType] = useState(0);
+  const [carTypeData, setCarTypeData] = useState([]);
+  const [text, onChangeText] = useState('Useless Text');
+
+  
 
   useEffect(() => {
     result = []
-    cars.map((elem) => result.push(elem.brand))
+    cars.map((elem) => result.push(elem))
     setCarData(result)
     setSuccess(true)
   }, []);
@@ -35,37 +42,68 @@ const MainScreen = () => {
     setDate(currentState);
   }
 
+  const getBrand = (jsonObject) => {
+    result = []
+    cars.map((elem) => result.push(elem.brand))
+    return result;
+  }
 
+  const getModel = (targetIndex) => {
+    result = cars[targetIndex]
+    return result.models;
+  }
 
+  /* Bottom Sheets */
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const stateArr = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Georgia', 
-  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 
-  'Louisiana', 'Maine', 'Maryland', 'Massachusettes', 'Michigan', 'Minnesota', 
-  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
-  'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 
-  'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 
-  'West Virginia', 'Wisconsin', 'Wyoming'];
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
 
 
   return (
     <View style={styles.container}>
-      <WheelPicker selectedIndex={selectedIndex} 
-      options={['Location 1', 'Location 2', 'Location 3', 'Location 4']} 
-      onChange= {(index) => setSelectedIndex(index)} />
+        <Text style={styles.mainScreenTitle}>Vehicle Details</Text>
 
-      <DateTimePicker value={date} mode='datetime' />
+        <BottomSheetModalProvider>
+            <TouchableOpacity onPress={handlePresentModalPress}>
+            <TextInput
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={text}
+            readOnly={true}
+            onPressIn={handlePresentModalPress} />
+            </TouchableOpacity>
+                 
+            <BottomSheetModal ref={bottomSheetModalRef} 
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+                <View style={styles.locationSheet}>
+                <WheelPicker selectedIndex={selectedIndex} 
+                options={['Location 1', 'Location 2', 'Location 3', 'Location 4']} 
+                onChange= {(index) => setSelectedIndex(index)} />
+        
+            </View>
+            </BottomSheetModal>
 
-      { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={carData} 
-      onChange={(index) => setCarIndex(index)} />}
+        </BottomSheetModalProvider>
+        
 
-      <WheelPicker selectedIndex={selectedStateIndex} options={stateArr}
+    
+
+
+      {/* { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={getBrand(cars)} 
+      onChange={(index) => setCarIndex(index)} />} 
+
+      <WheelPicker selectedIndex={carTypeIndex} options={getModel(selectedCarIndex)} 
+      onChange={(index) => setCarType(index)}/> 
+
+      <WheelPicker selectedIndex={selectedStateIndex} options={JSON.parse(JSON.stringify(states)).states}
       onChange= {(index) => setSelectedStateIndex(index)} />
 
       <TextInput style={styles.plateInput} value={plateNumber} 
       onChangeText={onChangePlateNum} placeholder='License Plate #' 
-      placeholderTextColor='grey'/>
+      placeholderTextColor='grey'/> */}
 
 
 
@@ -85,8 +123,10 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    flex: 1,
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: '#ffd401',
   },
 
   plateInput: {
@@ -95,10 +135,32 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 20,
-  }
+  },
 
+  locationSheet: {
+    flex: 1
 
-})
+  },
+
+  input: {
+    width: 350,
+    height: 40,
+    padding: 10,
+    borderRadius: 7,
+    backgroundColor: '#ffffff',
+    color: '#d7d6d7'
+    
+  },
+
+  mainScreenTitle: {
+    fontSize: 35,
+    fontWeight: '600',
+    textAlignVertical: 'top',
+    marginTop: 60,
+    marginBottom: 20
+  },
+
+  
 
 
 })
