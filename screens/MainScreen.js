@@ -1,5 +1,5 @@
-import { Modal, Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity } from 'react-native';
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { useState, useEffect, useMemo, useRef, useCallback, createRef } from 'react';
 import WheelPicker from 'react-native-wheely';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BottomSheetModal,BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -10,8 +10,8 @@ import cars from '../carInfo.json';
 
 
 const MainScreen = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [selectedIndex, setSelectedIndex] = useState(0);  /* State for location */
+  const [date, setDate] = useState(new Date(1598051730000)); /* State for date */
   const [selectedStateIndex, setSelectedStateIndex] = useState(0);
   const [plateNumber, onChangePlateNum] = useState();
   const [carData, setCarData] = useState([]);
@@ -20,6 +20,8 @@ const MainScreen = () => {
 
   const [carTypeIndex, setCarType] = useState(0);
   const [carTypeData, setCarTypeData] = useState([]);
+  const [carModelChosen, setCarModelChosen] = useState(false);
+
   const [text, onChangeText] = useState('Useless Text');
 
   
@@ -48,17 +50,52 @@ const MainScreen = () => {
     return result;
   }
 
-  const getModel = (targetIndex) => {
-    result = cars[targetIndex]
-    return result.models;
+  const handleCarChange = (index) => {
+    setCarIndex(index);
+    setCarTypeData(cars[index].models);
+    setCarModelChosen(true);
   }
 
   /* Bottom Sheets */
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  /* Reference and methods for location bottom sheet */
+  const bottomSheetModalRef = useRef(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
+  const handleClosePress = () => bottomSheetModalRef.current.close();
+
+  /* Reference and methods for date/time bottom sheet */
+  const dateBottomSheet = useRef(null);
+
+  const handleDateTimePress = useCallback(() => {
+    dateBottomSheet.current?.present();
+  }, []);
+
+  const handleDateTimeClose = () => dateBottomSheet.current.close();
+
+  /* Reference and methods for car make sheet */
+  const makeBottomSheet = useRef(null);
+
+  const handleMakePress = useCallback(() => {
+    makeBottomSheet.current?.present();
+  }, []);
+
+  const handleMakeClose = () => makeBottomSheet.current.close();
+
+  /* Reference and methods for model make sheet */
+  const modelBottomSheet = useRef(null);
+
+  const handleModelPress = useCallback(() => {
+    modelBottomSheet.current?.present()
+  }, []);
+
+  const handleModelClose = () => modelBottomSheet.current.close();
+
+
+
 
 
 
@@ -73,27 +110,110 @@ const MainScreen = () => {
             onChangeText={onChangeText}
             value={text}
             readOnly={true}
-            onPressIn={handlePresentModalPress} />
+            onPressIn={handlePresentModalPress}/>
             </TouchableOpacity>
                  
             <BottomSheetModal ref={bottomSheetModalRef} 
             index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
                 <View style={styles.locationSheet}>
+
                 <WheelPicker selectedIndex={selectedIndex} 
                 options={['Location 1', 'Location 2', 'Location 3', 'Location 4']} 
                 onChange= {(index) => setSelectedIndex(index)} />
-        
-            </View>
+
+                <TouchableOpacity style={styles.confirmButton} onPress={handleClosePress}>
+                    <Text style={styles.confirm}>Confirm</Text>
+                </TouchableOpacity>
+
+                </View>
             </BottomSheetModal>
 
         </BottomSheetModalProvider>
+
+        <BottomSheetModalProvider>
+            <TouchableOpacity>
+                <TextInput
+                style={styles.input}
+                placeholder='Date/time'
+                readOnly={true}
+                onPressIn={handleDateTimePress} />
+            </TouchableOpacity>
+
+            <BottomSheetModal ref={dateBottomSheet} 
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+                <View style={styles.locationSheet}>
+                    <DateTimePicker value={date} mode='datetime' 
+                    is24Hour={true} onChange={setDate} display='spinner'/>
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleDateTimeClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                    </TouchableOpacity>
         
+                </View>
+            </BottomSheetModal>
+
+
+        </BottomSheetModalProvider>
+        
+        <BottomSheetModalProvider>
+            <TouchableOpacity>
+                <TextInput
+                style={styles.input}
+                placeholder='Make'
+                readOnly={true}
+                onPressIn={handleMakePress} />
+            </TouchableOpacity>
+
+            <BottomSheetModal ref={makeBottomSheet} index={1}
+            snapPoints={useMemo(() => ['25%', '40%'], [])}>
+
+                <View style={styles.locationSheet}>
+                { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={getBrand(cars)} 
+                onChange={handleCarChange} />} 
+
+                <TouchableOpacity style={styles.confirmButton} onPress={handleMakeClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                </TouchableOpacity>
+                    
+                </View>
+
+
+            </BottomSheetModal>
+
+        </BottomSheetModalProvider>
+
+        <BottomSheetModalProvider>
+            <TouchableOpacity>
+                <TextInput
+                style={styles.input}
+                placeholder='Model'
+                readOnly={true}
+                onPressIn={handleModelPress}
+                />
+            </TouchableOpacity>
+
+            <BottomSheetModal ref={modelBottomSheet} index={1}
+            snapPoints={useMemo(() => ['25%', '40%'], [])}>
+                <View style={styles.locationSheet}>
+                { carModelChosen && <WheelPicker selectedIndex={carTypeIndex} options={carTypeData} 
+                onChange={(index) => setCarType(index)}/> }
+                <TouchableOpacity style={styles.confirmButton} onPress={handleModelClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                </TouchableOpacity>
+
+                </View>
+
+
+            </BottomSheetModal>
+
+
+
+
+        </BottomSheetModalProvider>
 
     
 
 
-      {/* { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={getBrand(cars)} 
-      onChange={(index) => setCarIndex(index)} />} 
+      {/* 
 
       <WheelPicker selectedIndex={carTypeIndex} options={getModel(selectedCarIndex)} 
       onChange={(index) => setCarType(index)}/> 
@@ -144,11 +264,12 @@ const styles = StyleSheet.create({
 
   input: {
     width: 350,
-    height: 40,
-    padding: 10,
+    height: 45,
+    padding: 12,
     borderRadius: 7,
     backgroundColor: '#ffffff',
-    color: '#d7d6d7'
+    color: '#d7d6d7',
+    marginBottom: 15,
     
   },
 
@@ -159,6 +280,22 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginBottom: 20
   },
+
+  confirmButton: {
+    width: 400,
+    height: 70,
+    backgroundColor: 'black',
+    marginTop: 50,
+    justifyContent: 'center'
+  },
+
+  confirm: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 18
+
+  }
 
   
 
