@@ -13,16 +13,23 @@ const MainScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);  /* State for location */
   const [date, setDate] = useState(new Date(1598051730000)); /* State for date */
   const [selectedStateIndex, setSelectedStateIndex] = useState(0);
+
   const [plateNumber, onChangePlateNum] = useState();
+
   const [carData, setCarData] = useState([]);
   const [selectedCarIndex, setCarIndex] = useState(0);
-  const [isSuccess, setSuccess] = useState(false);
 
+  const [isSuccess, setSuccess] = useState(false);
   const [carTypeIndex, setCarType] = useState(0);
   const [carTypeData, setCarTypeData] = useState([]);
+
   const [carModelChosen, setCarModelChosen] = useState(false);
 
   const [text, onChangeText] = useState('Useless Text');
+
+  const [carColorIndex, setCarColor] = useState(0);
+
+  
 
   
 
@@ -90,15 +97,32 @@ const MainScreen = () => {
     setCarModelChosen(true);
   }
 
-  /* Reference and methods for model make sheet */
+  /* Reference and methods for model sheet */
   const modelBottomSheet = useRef(null);
 
   const handleModelPress = useCallback(() => {
-        modelBottomSheet.current?.present()
-    
+        modelBottomSheet.current?.present() 
   }, []);
 
   const handleModelClose = () => modelBottomSheet.current.close();
+
+  /* Reference and methods for color sheet */
+  const colorBottomSheet = useRef(null);
+
+  const handleColorPress = useCallback(() => {
+    colorBottomSheet.current?.present()
+  }, []);
+
+  const handleColorClose = () => colorBottomSheet.current.close();
+
+  /* Reference and methods for state sheet */
+  const stateBottomSheet = useRef(null);
+
+  const handleStatePress = useCallback(() => {
+    stateBottomSheet.current?.present()
+  }, []);
+
+  const handleStateClose = () => stateBottomSheet.current.close();
 
 
 
@@ -188,14 +212,12 @@ const MainScreen = () => {
         </BottomSheetModalProvider>
 
         <BottomSheetModalProvider>
-            <Pressable>
-                <TextInput
+            <TextInput
                 style={styles.input}
                 placeholder='Model'
                 readOnly={true}
                 onPressIn={ carModelChosen ? handleModelPress : undefined}
-                />
-            </Pressable>
+            />
 
             <BottomSheetModal ref={modelBottomSheet} index={1}
             snapPoints={useMemo(() => ['25%', '40%'], [])}>
@@ -210,12 +232,66 @@ const MainScreen = () => {
 
                 </View>
 
-
             </BottomSheetModal>
-
 
         </BottomSheetModalProvider>
 
+
+        <BottomSheetModalProvider>
+            <TextInput
+                style={styles.input}
+                placeholder='Color'
+                readOnly={true}
+                onPressIn={handleColorPress}
+             />
+
+             <BottomSheetModal ref={colorBottomSheet} 
+             index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+                <View style={styles.locationSheet}>
+                    <WheelPicker selectedIndex={carColorIndex} 
+                    options={['Black', 'White', 'Gray', 'Blue', 'Green', 'Yellow', 'Orange']}
+                    onChange={(index) => setCarColor(index)} />
+
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleColorClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                    </TouchableOpacity>
+                    
+                </View>
+
+             </BottomSheetModal>
+
+        </BottomSheetModalProvider>
+
+
+        <BottomSheetModalProvider>
+            <TextInput
+            style={styles.input}
+            placeholder='State' 
+            readOnly={true}
+            onPressIn={handleStatePress}/>
+
+            <BottomSheetModal ref={stateBottomSheet}
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} >
+                <View style={styles.locationSheet}>
+
+                    <WheelPicker selectedIndex={selectedStateIndex} 
+                    options={JSON.parse(JSON.stringify(states)).states}
+                    onChange= {(index) => setSelectedStateIndex(index)} />
+
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleStateClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+            </BottomSheetModal>
+
+        </BottomSheetModalProvider>
+
+
+        <TextInput style={styles.plateInput} value={plateNumber} 
+        onChangeText={onChangePlateNum} placeholder='License Plate' 
+        />
     
 
 
@@ -256,11 +332,12 @@ const styles = StyleSheet.create({
   },
 
   plateInput: {
-    width: 200,
-    height: 30,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 20,
+    width: 350,
+    height: 45,
+    padding: 12,
+    borderRadius: 7,
+    backgroundColor: '#ffffff',
+    marginBottom: 15,
   },
 
   locationSheet: {
