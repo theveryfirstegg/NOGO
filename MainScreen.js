@@ -137,8 +137,7 @@ const MainScreen = () => {
             <TouchableOpacity onPress={handlePresentModalPress}>
             <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            placeholder='Location'
             readOnly={true}
             onPressIn={handlePresentModalPress}/>
             </TouchableOpacity>
@@ -158,9 +157,8 @@ const MainScreen = () => {
                 </View>
             </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
-        <BottomSheetModalProvider>
+
             <TouchableOpacity>
                 <TextInput
                 style={styles.input}
@@ -182,9 +180,7 @@ const MainScreen = () => {
             </BottomSheetModal>
 
 
-        </BottomSheetModalProvider>
         
-        <BottomSheetModalProvider>
             <TouchableOpacity>
                 <TextInput
                 style={styles.input}
@@ -209,9 +205,7 @@ const MainScreen = () => {
 
             </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
-        <BottomSheetModalProvider>
             <TextInput
                 style={styles.input}
                 placeholder='Model'
@@ -234,10 +228,8 @@ const MainScreen = () => {
 
             </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
 
-        <BottomSheetModalProvider>
             <TextInput
                 style={styles.input}
                 placeholder='Color'
@@ -260,10 +252,8 @@ const MainScreen = () => {
 
              </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
 
-        <BottomSheetModalProvider>
             <TextInput
             style={styles.input}
             placeholder='State' 
@@ -286,28 +276,22 @@ const MainScreen = () => {
 
             </BottomSheetModal>
 
+            <TextInput style={styles.input} value={plateNumber} 
+            onChangeText={onChangePlateNum} placeholder='License Plate' 
+            />
+
+        
+            <TouchableOpacity style={styles.submitButton}>
+                <Text style={styles.submitText}> Submit </Text>
+            </TouchableOpacity>
+
         </BottomSheetModalProvider>
 
 
-        <TextInput style={styles.plateInput} value={plateNumber} 
-        onChangeText={onChangePlateNum} placeholder='License Plate' 
-        />
+        
+
+        
     
-
-
-      {/* 
-
-      <WheelPicker selectedIndex={carTypeIndex} options={getModel(selectedCarIndex)} 
-      onChange={(index) => setCarType(index)}/> 
-
-      <WheelPicker selectedIndex={selectedStateIndex} options={JSON.parse(JSON.stringify(states)).states}
-      onChange= {(index) => setSelectedStateIndex(index)} />
-
-      <TextInput style={styles.plateInput} value={plateNumber} 
-      onChangeText={onChangePlateNum} placeholder='License Plate #' 
-      placeholderTextColor='grey'/> */}
-
-
 
 
 
@@ -331,14 +315,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffd401',
   },
 
-  plateInput: {
-    width: 350,
-    height: 45,
-    padding: 12,
-    borderRadius: 7,
-    backgroundColor: '#ffffff',
-    marginBottom: 15,
-  },
 
   locationSheet: {
     flex: 1
@@ -347,7 +323,7 @@ const styles = StyleSheet.create({
 
   input: {
     width: 350,
-    height: 45,
+    height: 50,
     padding: 12,
     borderRadius: 7,
     backgroundColor: '#ffffff',
@@ -377,6 +353,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     fontSize: 18
+
+  },
+
+  submitText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 18,
+    textAlign: 'center'
+
+  },
+
+  submitButton: {
+    width: 340,
+    height: 52,
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    marginTop: 170
 
   }
 
