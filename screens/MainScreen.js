@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity, Pressable } from 'react-native';
 import { useState, useEffect, useMemo, useRef, useCallback, createRef } from 'react';
 import WheelPicker from 'react-native-wheely';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -13,16 +13,23 @@ const MainScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);  /* State for location */
   const [date, setDate] = useState(new Date(1598051730000)); /* State for date */
   const [selectedStateIndex, setSelectedStateIndex] = useState(0);
+
   const [plateNumber, onChangePlateNum] = useState();
+
   const [carData, setCarData] = useState([]);
   const [selectedCarIndex, setCarIndex] = useState(0);
-  const [isSuccess, setSuccess] = useState(false);
 
+  const [isSuccess, setSuccess] = useState(false);
   const [carTypeIndex, setCarType] = useState(0);
   const [carTypeData, setCarTypeData] = useState([]);
+
   const [carModelChosen, setCarModelChosen] = useState(false);
 
   const [text, onChangeText] = useState('Useless Text');
+
+  const [carColorIndex, setCarColor] = useState(0);
+
+  
 
   
 
@@ -52,8 +59,8 @@ const MainScreen = () => {
 
   const handleCarChange = (index) => {
     setCarIndex(index);
-    setCarTypeData(cars[index].models);
     setCarModelChosen(true);
+    setCarTypeData(cars[index].models);
   }
 
   /* Bottom Sheets */
@@ -65,7 +72,9 @@ const MainScreen = () => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const handleClosePress = () => bottomSheetModalRef.current.close();
+  const handleClosePress = () => {
+    bottomSheetModalRef.current.close();
+}
 
   /* Reference and methods for date/time bottom sheet */
   const dateBottomSheet = useRef(null);
@@ -83,16 +92,37 @@ const MainScreen = () => {
     makeBottomSheet.current?.present();
   }, []);
 
-  const handleMakeClose = () => makeBottomSheet.current.close();
+  const handleMakeClose = () => {
+    makeBottomSheet.current.close();
+    setCarModelChosen(true);
+  }
 
-  /* Reference and methods for model make sheet */
+  /* Reference and methods for model sheet */
   const modelBottomSheet = useRef(null);
 
   const handleModelPress = useCallback(() => {
-    modelBottomSheet.current?.present()
+        modelBottomSheet.current?.present() 
   }, []);
 
   const handleModelClose = () => modelBottomSheet.current.close();
+
+  /* Reference and methods for color sheet */
+  const colorBottomSheet = useRef(null);
+
+  const handleColorPress = useCallback(() => {
+    colorBottomSheet.current?.present()
+  }, []);
+
+  const handleColorClose = () => colorBottomSheet.current.close();
+
+  /* Reference and methods for state sheet */
+  const stateBottomSheet = useRef(null);
+
+  const handleStatePress = useCallback(() => {
+    stateBottomSheet.current?.present()
+  }, []);
+
+  const handleStateClose = () => stateBottomSheet.current.close();
 
 
 
@@ -107,8 +137,7 @@ const MainScreen = () => {
             <TouchableOpacity onPress={handlePresentModalPress}>
             <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            placeholder='Location'
             readOnly={true}
             onPressIn={handlePresentModalPress}/>
             </TouchableOpacity>
@@ -128,9 +157,8 @@ const MainScreen = () => {
                 </View>
             </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
-        <BottomSheetModalProvider>
+
             <TouchableOpacity>
                 <TextInput
                 style={styles.input}
@@ -152,9 +180,7 @@ const MainScreen = () => {
             </BottomSheetModal>
 
 
-        </BottomSheetModalProvider>
         
-        <BottomSheetModalProvider>
             <TouchableOpacity>
                 <TextInput
                 style={styles.input}
@@ -170,62 +196,102 @@ const MainScreen = () => {
                 { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={getBrand(cars)} 
                 onChange={handleCarChange} />} 
 
-                <TouchableOpacity style={styles.confirmButton} onPress={handleMakeClose}>
+                <Pressable style={styles.confirmButton} onPress={handleMakeClose}>
                         <Text style={styles.confirm}>Confirm</Text>
-                </TouchableOpacity>
+                </Pressable>
                     
                 </View>
 
 
             </BottomSheetModal>
 
-        </BottomSheetModalProvider>
 
-        <BottomSheetModalProvider>
-            <TouchableOpacity>
-                <TextInput
+            <TextInput
                 style={styles.input}
                 placeholder='Model'
                 readOnly={true}
-                onPressIn={handleModelPress}
-                />
-            </TouchableOpacity>
+                onPressIn={ carModelChosen ? handleModelPress : undefined}
+            />
 
             <BottomSheetModal ref={modelBottomSheet} index={1}
             snapPoints={useMemo(() => ['25%', '40%'], [])}>
                 <View style={styles.locationSheet}>
+
                 { carModelChosen && <WheelPicker selectedIndex={carTypeIndex} options={carTypeData} 
                 onChange={(index) => setCarType(index)}/> }
+
                 <TouchableOpacity style={styles.confirmButton} onPress={handleModelClose}>
                         <Text style={styles.confirm}>Confirm</Text>
                 </TouchableOpacity>
 
                 </View>
 
-
             </BottomSheetModal>
 
 
 
+            <TextInput
+                style={styles.input}
+                placeholder='Color'
+                readOnly={true}
+                onPressIn={handleColorPress}
+             />
+
+             <BottomSheetModal ref={colorBottomSheet} 
+             index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+                <View style={styles.locationSheet}>
+                    <WheelPicker selectedIndex={carColorIndex} 
+                    options={['Black', 'White', 'Gray', 'Blue', 'Green', 'Yellow', 'Orange']}
+                    onChange={(index) => setCarColor(index)} />
+
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleColorClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                    </TouchableOpacity>
+                    
+                </View>
+
+             </BottomSheetModal>
+
+
+
+            <TextInput
+            style={styles.input}
+            placeholder='State' 
+            readOnly={true}
+            onPressIn={handleStatePress}/>
+
+            <BottomSheetModal ref={stateBottomSheet}
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} >
+                <View style={styles.locationSheet}>
+
+                    <WheelPicker selectedIndex={selectedStateIndex} 
+                    options={JSON.parse(JSON.stringify(states)).states}
+                    onChange= {(index) => setSelectedStateIndex(index)} />
+
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleStateClose}>
+                        <Text style={styles.confirm}>Confirm</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+            </BottomSheetModal>
+
+            <TextInput style={styles.input} value={plateNumber} 
+            onChangeText={onChangePlateNum} placeholder='License Plate' 
+            />
+
+        
+            <TouchableOpacity style={styles.submitButton}>
+                <Text style={styles.submitText}> Submit </Text>
+            </TouchableOpacity>
 
         </BottomSheetModalProvider>
 
+
+        
+
+        
     
-
-
-      {/* 
-
-      <WheelPicker selectedIndex={carTypeIndex} options={getModel(selectedCarIndex)} 
-      onChange={(index) => setCarType(index)}/> 
-
-      <WheelPicker selectedIndex={selectedStateIndex} options={JSON.parse(JSON.stringify(states)).states}
-      onChange= {(index) => setSelectedStateIndex(index)} />
-
-      <TextInput style={styles.plateInput} value={plateNumber} 
-      onChangeText={onChangePlateNum} placeholder='License Plate #' 
-      placeholderTextColor='grey'/> */}
-
-
 
 
 
@@ -249,13 +315,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffd401',
   },
 
-  plateInput: {
-    width: 200,
-    height: 30,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 20,
-  },
 
   locationSheet: {
     flex: 1
@@ -264,7 +323,7 @@ const styles = StyleSheet.create({
 
   input: {
     width: 350,
-    height: 45,
+    height: 50,
     padding: 12,
     borderRadius: 7,
     backgroundColor: '#ffffff',
@@ -294,6 +353,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     fontSize: 18
+
+  },
+
+  submitText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 18,
+    textAlign: 'center'
+
+  },
+
+  submitButton: {
+    width: 340,
+    height: 52,
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    marginTop: 170
 
   }
 
