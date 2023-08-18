@@ -2,22 +2,45 @@ import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import {NavigationContainer, useNavigation } from '@react-navigation/native';
 import MainScreen from './screens/MainScreen';
 import LogInScreen from './screens/LogInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SuccessScreen from './screens/SuccessScreen';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare(){
+      await SplashScreen.preventAutoHideAsync();
+      setAppIsReady(true);
+    }
+    prepare();
+  }, [])
+
+  const onLayoutRootView = useCallback(async () => {
+    if(appIsReady){
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if(!appIsReady){
+    return null;
+  }
+
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={onLayoutRootView}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name='LogIn' component={LogInScreen} />
         <Stack.Screen name='Main' component={MainScreen} />
+        <Stack.Screen name='Success' component={SuccessScreen} />
       </Stack.Navigator>
 
     </NavigationContainer>
