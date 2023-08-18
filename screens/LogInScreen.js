@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TextInput, ScrollView, TouchableHighlight, TouchableOpacity, Pressable } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Modal, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import users from '../userInfo.json';

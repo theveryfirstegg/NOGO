@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef, useCallback, createRef } from 're
 import WheelPicker from 'react-native-wheely';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BottomSheetModal,BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import states from '../states.json';
@@ -29,7 +30,7 @@ const MainScreen = () => {
 
   const [carColorIndex, setCarColor] = useState(0);
 
-  
+  const nav = useNavigation();
 
   
 
@@ -143,7 +144,7 @@ const MainScreen = () => {
             </TouchableOpacity>
                  
             <BottomSheetModal ref={bottomSheetModalRef} 
-            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='replace'>
                 <View style={styles.locationSheet}>
 
                 <WheelPicker selectedIndex={selectedIndex} 
@@ -168,7 +169,7 @@ const MainScreen = () => {
             </TouchableOpacity>
 
             <BottomSheetModal ref={dateBottomSheet} 
-            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='replace'>
                 <View style={styles.locationSheet}>
                     <DateTimePicker value={date} mode='datetime' 
                     is24Hour={true} onChange={setDate} display='spinner'/>
@@ -190,7 +191,7 @@ const MainScreen = () => {
             </TouchableOpacity>
 
             <BottomSheetModal ref={makeBottomSheet} index={1}
-            snapPoints={useMemo(() => ['25%', '40%'], [])}>
+            snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='replace'>
 
                 <View style={styles.locationSheet}>
                 { isSuccess && <WheelPicker selectedIndex={selectedCarIndex} options={getBrand(cars)} 
@@ -214,7 +215,7 @@ const MainScreen = () => {
             />
 
             <BottomSheetModal ref={modelBottomSheet} index={1}
-            snapPoints={useMemo(() => ['25%', '40%'], [])}>
+            snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='replace'>
                 <View style={styles.locationSheet}>
 
                 { carModelChosen && <WheelPicker selectedIndex={carTypeIndex} options={carTypeData} 
@@ -238,7 +239,7 @@ const MainScreen = () => {
              />
 
              <BottomSheetModal ref={colorBottomSheet} 
-             index={1} snapPoints={useMemo(() => ['25%', '40%'], [])}>
+             index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='replace'>
                 <View style={styles.locationSheet}>
                     <WheelPicker selectedIndex={carColorIndex} 
                     options={['Black', 'White', 'Gray', 'Blue', 'Green', 'Yellow', 'Orange']}
@@ -261,7 +262,7 @@ const MainScreen = () => {
             onPressIn={handleStatePress}/>
 
             <BottomSheetModal ref={stateBottomSheet}
-            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} >
+            index={1} snapPoints={useMemo(() => ['25%', '40%'], [])} stackBehavior='behavior'>
                 <View style={styles.locationSheet}>
 
                     <WheelPicker selectedIndex={selectedStateIndex} 
@@ -281,7 +282,7 @@ const MainScreen = () => {
             />
 
         
-            <TouchableOpacity style={styles.submitButton}>
+            <TouchableOpacity style={styles.submitButton} onPress={() => nav.navigate('Success')}>
                 <Text style={styles.submitText}> Submit </Text>
             </TouchableOpacity>
 
