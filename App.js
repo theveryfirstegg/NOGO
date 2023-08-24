@@ -1,15 +1,13 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useCallback, useEffect, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import {NavigationContainer, useNavigation } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import MainScreen from './screens/MainScreen';
 import LogInScreen from './screens/LogInScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SuccessScreen from './screens/SuccessScreen';
 
 const Stack = createStackNavigator();
