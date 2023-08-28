@@ -8,6 +8,7 @@ import LogInScreen from './screens/LogInScreen'
 import SuccessScreen from './screens/SuccessScreen'
 import SplashSwapScreen from './screens/SplashSwapScreen'
 import { View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const Stack = createNativeStackNavigator()
 
@@ -37,15 +38,17 @@ export default function App() {
 	}
 
 	return (
-		<View style={{flex: 1}} onLayout={onLayoutView}>
-			<NavigationContainer>
-				<Stack.Navigator screenOptions={{ headerShown: false }}>
-					<Stack.Screen name="SplashSwap" component={SplashSwapScreen} />
-					<Stack.Screen name="LogIn" component={LogInScreen} options={{animation: 'fade'}} />
-					<Stack.Screen name="Main" component={MainScreen} />
-					<Stack.Screen name="Success" component={SuccessScreen} />
-				</Stack.Navigator>
-			</NavigationContainer>
-		</View>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<View style={{flex: 1}} onLayout={onLayoutView}>
+				<NavigationContainer>
+					<Stack.Navigator screenOptions={{ headerShown: false }}>
+						<Stack.Screen name="SplashSwap" component={SplashSwapScreen} />
+						<Stack.Screen name="LogIn" component={LogInScreen} options={{animation: 'fade'}} />
+						<Stack.Screen name="Main" component={MainScreen} />
+						<Stack.Screen name="Success" component={SuccessScreen} />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</View>
+		</GestureHandlerRootView>
 	)
 }
