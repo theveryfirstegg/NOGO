@@ -7,7 +7,7 @@ import {
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import styles from './LogInScreen.styles'
-import users from '../userInfo.json'
+import users from '../data/proxy/users.json'
 
 
 const LogInScreen = () => {

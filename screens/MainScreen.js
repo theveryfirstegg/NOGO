@@ -16,8 +16,8 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
 import styles from './MainScreen.styles'
-import states from '../states.json'
-import cars from '../carInfo.json'
+import states from '../data/states.json'
+import cars from '../data/cars.json'
 
 const MainScreen = () => {
 	const [selectedIndex, setSelectedIndex] =
