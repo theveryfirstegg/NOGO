@@ -7,9 +7,37 @@ export default StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: '#ffd401',
 	},
+	sheetHandle: {
+		backgroundColor: 'red',
+		height: 0,
+		padding: 0,
+		margin: 0,
+		opacity: 0,
+	},
 
-	locationSheet: {
+	innerContainerSheet: {
 		flex: 1,
+	},
+
+	innerContainerSheetHeader: {
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		// backgroundColor: 'red',
+		paddingVertical: 10,
+		paddingHorizontal: 10,
+		top: -4,
+	},
+	innerContainerButton: {
+		marginTop: 10,
+		backgroundColor: 'black',
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+		borderRadius: 30,
+	},
+	innerContainerSheetHeaderText: {
+		fontWeight: 'bold',
+		fontSize: 18,
+		color: 'white',
 	},
 
 	input: {
@@ -19,6 +47,7 @@ export default StyleSheet.create({
 		borderRadius: 7,
 		backgroundColor: '#ffffff',
 		color: 'black',
+		fontSize: 18,
 		marginBottom: 15,
 	},
 
@@ -63,6 +92,6 @@ export default StyleSheet.create({
 	},
 
 	optionsStyle: {
-		fontSize: 20,
+		fontSize: 22,
 	},
 })
