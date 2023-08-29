@@ -5,13 +5,11 @@ import {
 	TouchableOpacity,
 } from 'react-native'
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
 import styles from './LogInScreen.styles'
 import users from '../data/proxy/users.json'
 
 
-const LogInScreen = () => {
-	const nav = useNavigation()
+const LogInScreen = ({ navigation }) => {
 	const [userName, setUserName] = useState('')
 	const [userPassword, setPassword] = useState('')
 	const [hidePassword, setHidePassword] = useState(true)
@@ -27,7 +25,7 @@ const LogInScreen = () => {
 		)
 
 		if (found) {
-			nav.navigate('Main')
+			navigation.navigate('Main')
 		}
 	}
 

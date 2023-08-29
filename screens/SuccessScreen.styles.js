@@ -35,7 +35,8 @@ export default StyleSheet.create({
 		backgroundColor: 'black',
 		alignItems: 'center',
 		borderRadius: 10,
-		padding: 10,
+		paddingVertical: 10,
+		paddingHorizontal: 20,
 	},
 
 	modalText: {

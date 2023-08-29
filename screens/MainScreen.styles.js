@@ -91,6 +91,11 @@ export default StyleSheet.create({
 		marginTop: 170,
 	},
 
+	submitButtonDisabled: {
+		backgroundColor: '#8c780e',
+		// opacity: 0.5,
+	},
+
 	optionsStyle: {
 		fontSize: 22,
 	},

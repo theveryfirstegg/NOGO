@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import {
 	Text,
@@ -32,26 +33,22 @@ const MainScreen = ({ navigation }) => {
 		color: { current: '', value: '' }
 	})
 
-	const datetime = useMemo(() => {
-		return dayjs(option.date.value).format('MMMM D, YYYY @h:mm A')
-	}, [option.date.value])
+	const datetime = useMemo(() => dayjs(option.date.value).format('MMMM D, YYYY @h:mm A'), [option.date.value])
 
-	const carMakes = useMemo(() => {
-		return cars.map((elem) => elem.brand)
-	}, [])
+	const carMakes = useMemo(() => cars.map((elem) => elem.brand), [])
 
-	const carModelsCurrent = useMemo(() => {
-		return cars[option.make.current].models
-	}, [option.make.current])
+	const carModelsCurrent = useMemo(() => cars[option.make.current].models, [option.make.current])
 
-	const carModelsValue = useMemo(() => {
-		return cars[option.make.value].models
-	}, [option.make.value])
+	const carModelsValue = useMemo(() => cars[option.make.value].models, [option.make.value])
 
-	const handleOptionSelect = () => {
-		bottomSheetModalRef.current.close()
-		updateOption(option[type].current, 'value')
-	}
+	const isReadyToSubmit = useMemo(() => {
+		for (const [key] of Object.entries(option)) {
+			if (option[key].value === '') {
+				return false
+			}
+		}
+		return true
+	}, [option])
 
 	const updateOption = (value, where='current', theType=type) => {
 		setOption((prevOption) => ({ 
@@ -63,68 +60,63 @@ const MainScreen = ({ navigation }) => {
 		}))
 	}
 
-	const RenderOptionsLocation = () => {
-		return (
-			<WheelPicker
-				selectedIndex={option.location.current}
-				options={locations}
-				onChange={(index) => updateOption(index)}
-				itemTextStyle={styles.optionsStyle} 
-			/>
-		)
+	const handleOptionSelect = () => {
+		bottomSheetModalRef.current.close()
+		updateOption(option[type].current, 'value')
 	}
 
-	const RenderOptionsDate = () => {
-		return (
-			<DateTimePicker
-				value={option.date.current}
-				mode="datetime"
-				is24Hour={true}
-				onChange={(e, selectedDate) => updateOption(selectedDate)}
-				display="spinner"
-				style={{ marginBottom: -16 }}
-			/>
-		)
-	}
+	const RenderOptionsLocation = useCallback(() => (
+		<WheelPicker
+			selectedIndex={option.location.current}
+			options={locations}
+			onChange={(index) => updateOption(index)}
+			itemTextStyle={styles.optionsStyle} 
+		/>
+	), [option.location])
 
-	const RenderCarMake = () => {
-		return (
-			<WheelPicker
-				selectedIndex={option.make.current}
-				options={carMakes}
-				onChange={(index) => {
-					updateOption(index)
-					updateOption(0, 'value', 'model') // reset car model
-				}}
-				itemTextStyle={styles.optionsStyle}
-			/>
-		)
-	}
+	const RenderOptionsDate = useCallback(() => (
+		<DateTimePicker
+			value={option.date.current}
+			mode="datetime"
+			is24Hour
+			onChange={(e, selectedDate) => updateOption(selectedDate)}
+			display="spinner"
+			style={{ marginBottom: -16 }}
+		/>
+	), [option.date])
 
-	const RenderCarModel = () => {
-		return (
-			<WheelPicker
-				selectedIndex={option.model.current}
-				options={carModelsCurrent}
-				onChange={(index) => updateOption(index)}
-				itemTextStyle={styles.optionsStyle}
-			/>
-		)
-	}
+	const RenderCarMake = useCallback(() => (
+		<WheelPicker
+			selectedIndex={option.make.current}
+			options={carMakes}
+			onChange={(index) => {
+				updateOption(index)
+				updateOption(0, 'value', 'model') // reset car model
+			}}
+			itemTextStyle={styles.optionsStyle}
+		/>
+	), [option.make])
 
-	const RenderState = () => {
-		return (
-			<WheelPicker
-				selectedIndex={option.state.current}
-				options={states}
-				onChange={(index) => updateOption(index)}
-				itemTextStyle={styles.optionsStyle}
-			/>
-		)
-	}
+	const RenderCarModel = useCallback(() => (
+		<WheelPicker
+			selectedIndex={option.model.current}
+			options={carModelsCurrent}
+			onChange={(index) => updateOption(index)}
+			itemTextStyle={styles.optionsStyle}
+		/>
+	), [option.model])
 
-	const RenderPickerView = ({ type }) => {
-		switch (type) {
+	const RenderState = useCallback(() => (
+		<WheelPicker
+			selectedIndex={option.state.current}
+			options={states}
+			onChange={(index) => updateOption(index)}
+			itemTextStyle={styles.optionsStyle}
+		/>
+	), [option.state])
+
+	const RenderPickerView = useCallback(({ type: theType }) => {
+		switch (theType) {
             
 		case 'location':
 			return (
@@ -149,7 +141,7 @@ const MainScreen = ({ navigation }) => {
 		default:
 			return null
 		}
-	}
+	}, [RenderOptionsLocation, RenderOptionsDate, RenderCarMake, RenderCarModel, RenderState])
 
 	const handlePresentModal = (theType) => {
 		setType(theType)
@@ -165,7 +157,7 @@ const MainScreen = ({ navigation }) => {
 				opacity={0.3}
 				disappearsOnIndex={-1}
 				appearsOnIndex={0}
-				pressBehavior={'close'}
+				pressBehavior="close"
 			/>
 		),
 		[]
@@ -179,28 +171,28 @@ const MainScreen = ({ navigation }) => {
 					value={locations[option.location.value]}
 					style={styles.input}
 					placeholder="Location"
-					readOnly={true}
+					readOnly
 					onPressIn={() => handlePresentModal('location')}
 				/>
 				<TextInput
 					value={datetime}
 					style={styles.input}
 					placeholder="Date/time"
-					readOnly={true}
+					readOnly
 					onPressIn={() => handlePresentModal('date')}
 				/>
 				<TextInput
 					value={carMakes[option.make.value]}
 					style={styles.input}
 					placeholder="Make"
-					readOnly={true}
+					readOnly
 					onPressIn={() => handlePresentModal('make')}
 				/>
 				<TextInput
 					value={carModelsValue[option.model.value]}
 					style={styles.input}
 					placeholder="Model"
-					readOnly={true}
+					readOnly
 					onPressIn={() => handlePresentModal('model')}
 				/>
 				<TextInput
@@ -214,7 +206,7 @@ const MainScreen = ({ navigation }) => {
 					value={states[option.state.value]}
 					style={styles.input}
 					placeholder="State"
-					readOnly={true}
+					readOnly
 					onPressIn={() => handlePresentModal('state')}
 				/>
 				<TextInput
@@ -223,11 +215,18 @@ const MainScreen = ({ navigation }) => {
 					onChangeText={(value) => updateOption(value, 'value', 'plate')}
 					placeholder="License Plate"
 				/>
+
 				<TouchableOpacity
-					style={styles.submitButton}
+					style={[styles.submitButton,
+						!isReadyToSubmit && styles.submitButtonDisabled
+					]}
+					disabled={!isReadyToSubmit}
 					onPress={() => { navigation.navigate('Success')}}
 				>
-					<Text style={styles.submitText}>Submit</Text>
+					<Text style={[
+						styles.submitText,
+						!isReadyToSubmit && styles.submitTextDisabled
+					]}>Submit</Text>
 				</TouchableOpacity>
 
 				<BottomSheetModal

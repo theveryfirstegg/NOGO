@@ -1,20 +1,19 @@
-import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
+import { View } from 'react-native'
 import MainScreen from './screens/MainScreen'
 import LogInScreen from './screens/LogInScreen'
 import SuccessScreen from './screens/SuccessScreen'
 import SplashSwapScreen from './screens/SplashSwapScreen'
-import { View } from 'react-native'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const Stack = createNativeStackNavigator()
 
 SplashScreen.preventAutoHideAsync()
 
-export default function App() {
+const App = () => {
 	const [appIsReady, setAppIsReady] = useState(false)
 
 	useEffect(() => {
@@ -52,3 +51,5 @@ export default function App() {
 		</GestureHandlerRootView>
 	)
 }
+
+export default App

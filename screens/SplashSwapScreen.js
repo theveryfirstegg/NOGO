@@ -1,10 +1,11 @@
 import { View, Image } from 'react-native'
-import styles from './SplashSwapScreen.styles'
 import Animated, { useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useEffect } from 'react'
+import styles from './SplashSwapScreen.styles'
 
 const SplashSwapScreen = ({ navigation }) => {
 	const opacity = useSharedValue(0)
+    
 	useEffect(() => {
 		opacity.value = withDelay(100, withTiming(1, {duration: 500}))
 		setTimeout(() => {
