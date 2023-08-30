@@ -146,6 +146,7 @@ const MainScreen = ({ navigation }) => {
 	}, [RenderOptionsLocation, RenderOptionsDate, RenderCarMake, RenderCarModel, RenderState])
 
 	const handlePresentModal = (theType) => {
+		Keyboard.dismiss()
 		setType(theType)
 		updateOption(option[theType].value, 'current', theType)
 		bottomSheetModalRef.current?.present()
@@ -165,20 +166,13 @@ const MainScreen = ({ navigation }) => {
 		[]
 	)
 
-	const DismissKeyboard = ({children}) => (
-		<TouchableWithoutFeedback
-		onPress={() => Keyboard.dismiss()}>
-			 {children}
-		</TouchableWithoutFeedback>
-
-	);
 
 	return (
 		<BottomSheetModalProvider>
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<View style={styles.container}>
 				<Text style={styles.mainScreenTitle}>Vehicle Details</Text>
-				<TextInput onBlur={Keyboard.dismiss()}
+				<TextInput
 					value={locations[option.location.value]}
 					style={styles.input}
 					placeholder="Location"
