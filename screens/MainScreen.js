@@ -4,7 +4,9 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	Keyboard
 } from 'react-native'
 import { useState, useMemo, useRef, useCallback } from 'react'
 import dayjs from 'dayjs'
@@ -163,17 +165,27 @@ const MainScreen = ({ navigation }) => {
 		[]
 	)
 
+	const DismissKeyboard = ({children}) => (
+		<TouchableWithoutFeedback
+		onPress={() => Keyboard.dismiss()}>
+			 {children}
+		</TouchableWithoutFeedback>
+
+	);
+
 	return (
 		<BottomSheetModalProvider>
+			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<View style={styles.container}>
 				<Text style={styles.mainScreenTitle}>Vehicle Details</Text>
-				<TextInput
+				<TextInput onBlur={Keyboard.dismiss()}
 					value={locations[option.location.value]}
 					style={styles.input}
 					placeholder="Location"
 					readOnly
 					onPressIn={() => handlePresentModal('location')}
 				/>
+		
 				<TextInput
 					value={datetime}
 					style={styles.input}
@@ -181,6 +193,7 @@ const MainScreen = ({ navigation }) => {
 					readOnly
 					onPressIn={() => handlePresentModal('date')}
 				/>
+	
 				<TextInput
 					value={carMakes[option.make.value]}
 					style={styles.input}
@@ -194,13 +207,16 @@ const MainScreen = ({ navigation }) => {
 					placeholder="Model"
 					readOnly
 					onPressIn={() => handlePresentModal('model')}
+					
 				/>
+				
 				<TextInput
 					style={styles.input}
 					placeholder="Color"
 					value={option.color.value}
 					onChangeText={(value) => updateOption(value, 'value', 'color')}
 				/>
+				
 
 				<TextInput
 					value={states[option.state.value]}
@@ -252,6 +268,7 @@ const MainScreen = ({ navigation }) => {
 					</View>
 				</BottomSheetModal>
 			</View>
+			</TouchableWithoutFeedback>
 		</BottomSheetModalProvider>
 	)
 }
