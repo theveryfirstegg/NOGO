@@ -1,0 +1,17 @@
+{
+    "screenOptions": {
+        "headerShown": true,
+        "headerStyle": {
+            "backgroundColor": "#ffd401"
+        },
+        "headerTitleStyle": {
+            "fontFamily": "black",
+            "fontSize": 22
+        },
+        "headerShadowVisible": false
+    },
+    "colors": {
+        "dark": "#000000",
+        "light": "#ffd401"
+    }
+}

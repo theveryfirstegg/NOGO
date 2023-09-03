@@ -8,7 +8,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard
 } from 'react-native'
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react'
 import dayjs from 'dayjs'
 import WheelPicker from 'react-native-wheely'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -21,6 +21,7 @@ import styles from './MainScreen.styles'
 import states from '../data/states.json'
 import cars from '../data/cars.json'
 import locations from '../data/locations.json'
+import CloseButton from '../components/CloseButton'
 
 const MainScreen = ({ navigation }) => {
 	const bottomSheetModalRef = useRef(null)
@@ -119,29 +120,28 @@ const MainScreen = ({ navigation }) => {
 
 	const RenderPickerView = useCallback(({ type: theType }) => {
 		switch (theType) {
-            
-		case 'location':
-			return (
-				<RenderOptionsLocation />
-			)
-		case 'date':
-			return (
-				<RenderOptionsDate />
-			)
-		case 'make':
-			return (
-				<RenderCarMake />
-			)
-		case 'model':
-			return (
-				<RenderCarModel />
-			)
-		case 'state':
-			return (
-				<RenderState />
-			)
-		default:
-			return null
+			case 'location':
+				return (
+					<RenderOptionsLocation />
+				)
+			case 'date':
+				return (
+					<RenderOptionsDate />
+				)
+			case 'make':
+				return (
+					<RenderCarMake />
+				)
+			case 'model':
+				return (
+					<RenderCarModel />
+				)
+			case 'state':
+				return (
+					<RenderState />
+				)
+			default:
+				return null
 		}
 	}, [RenderOptionsLocation, RenderOptionsDate, RenderCarMake, RenderCarModel, RenderState])
 
@@ -151,6 +151,12 @@ const MainScreen = ({ navigation }) => {
 		updateOption(option[theType].value, 'current', theType)
 		bottomSheetModalRef.current?.present()
 	}
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerRight: () => <CloseButton />,
+		})
+	}, [navigation])
 
 	/* Bottom Sheet Backdrops */
 	const renderBackdrop = useCallback(
@@ -166,102 +172,100 @@ const MainScreen = ({ navigation }) => {
 		[]
 	)
 
-
 	return (
 		<BottomSheetModalProvider>
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-			<View style={styles.container}>
-				<Text style={styles.mainScreenTitle}>Vehicle Details</Text>
-				<TextInput
-					value={locations[option.location.value]}
-					style={styles.input}
-					placeholder="Location"
-					readOnly
-					onPressIn={() => handlePresentModal('location')}
-				/>
+				<View style={styles.container}>
+					{/* <Text style={styles.mainScreenTitle}>Vehicle Details</Text> */}
+					<TextInput
+						value={locations[option.location.value]}
+						style={styles.input}
+						placeholder="Location"
+						readOnly
+						onPressIn={() => handlePresentModal('location')}
+					/>
 		
-				<TextInput
-					value={datetime}
-					style={styles.input}
-					placeholder="Date/time"
-					readOnly
-					onPressIn={() => handlePresentModal('date')}
-				/>
+					<TextInput
+						value={datetime}
+						style={styles.input}
+						placeholder="Date/time"
+						readOnly
+						onPressIn={() => handlePresentModal('date')}
+					/>
 	
-				<TextInput
-					value={carMakes[option.make.value]}
-					style={styles.input}
-					placeholder="Make"
-					readOnly
-					onPressIn={() => handlePresentModal('make')}
-				/>
-				<TextInput
-					value={carModelsValue[option.model.value]}
-					style={styles.input}
-					placeholder="Model"
-					readOnly
-					onPressIn={() => handlePresentModal('model')}
+					<TextInput
+						value={carMakes[option.make.value]}
+						style={styles.input}
+						placeholder="Make"
+						readOnly
+						onPressIn={() => handlePresentModal('make')}
+					/>
+					<TextInput
+						value={carModelsValue[option.model.value]}
+						style={styles.input}
+						placeholder="Model"
+						readOnly
+						onPressIn={() => handlePresentModal('model')}
 					
-				/>
+					/>
 				
-				<TextInput
-					style={styles.input}
-					placeholder="Color"
-					value={option.color.value}
-					onChangeText={(value) => updateOption(value, 'value', 'color')}
-				/>
-				
+					<TextInput
+						style={styles.input}
+						placeholder="Color"
+						value={option.color.value}
+						onChangeText={(value) => updateOption(value, 'value', 'color')}
+					/>
 
-				<TextInput
-					value={states[option.state.value]}
-					style={styles.input}
-					placeholder="State"
-					readOnly
-					onPressIn={() => handlePresentModal('state')}
-				/>
-				<TextInput
-					style={styles.input}
-					value={option.plate.value}
-					onChangeText={(value) => updateOption(value, 'value', 'plate')}
-					placeholder="License Plate"
-				/>
+					<TextInput
+						value={states[option.state.value]}
+						style={styles.input}
+						placeholder="State"
+						readOnly
+						onPressIn={() => handlePresentModal('state')}
+					/>
+					<TextInput
+						style={styles.input}
+						value={option.plate.value}
+						onChangeText={(value) => updateOption(value, 'value', 'plate')}
+						placeholder="License Plate"
+					/>
 
-				<TouchableOpacity
-					style={[styles.submitButton,
-						!isReadyToSubmit && styles.submitButtonDisabled
-					]}
-					disabled={!isReadyToSubmit}
-					onPress={() => { navigation.navigate('Success')}}
-				>
-					<Text style={[
-						styles.submitText,
-						!isReadyToSubmit && styles.submitTextDisabled
-					]}>Submit</Text>
-				</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.submitButton,
+							!isReadyToSubmit && styles.submitButtonDisabled
+						]}
+						disabled={!isReadyToSubmit}
+						onPress={() => { navigation.navigate('Success')}}
+					>
+						<Text style={[
+							styles.submitText,
+							!isReadyToSubmit && styles.submitTextDisabled
+						]}>Submit</Text>
+					</TouchableOpacity>
 
-				<BottomSheetModal
-					ref={bottomSheetModalRef}
-					index={0}
-					snapPoints={useMemo(() => ['40%'], [])}
-					stackBehavior="replace"
-					backdropComponent={renderBackdrop}
-					handleStyle={styles.sheetHandle}
-				>
-					<View style={styles.innerContainerSheet}>
-						<View style={styles.innerContainerSheetHeader}>
-							<TouchableOpacity
-								activeOpacity={0.8}
-								style={styles.innerContainerButton}
-								onPress={handleOptionSelect}>
-								<Text style={styles.innerContainerSheetHeaderText}>
+					<BottomSheetModal
+						ref={bottomSheetModalRef}
+						index={0}
+						snapPoints={useMemo(() => ['40%'], [])}
+						stackBehavior="replace"
+						backdropComponent={renderBackdrop}
+						handleStyle={styles.sheetHandle}
+					>
+						<View style={styles.innerContainerSheet}>
+							<View style={styles.innerContainerSheetHeader}>
+								<TouchableOpacity
+									activeOpacity={0.8}
+									style={styles.innerContainerButton}
+									onPress={handleOptionSelect}>
+									<Text style={styles.innerContainerSheetHeaderText}>
                                     Done
-								</Text>
-							</TouchableOpacity>
+									</Text>
+								</TouchableOpacity>
+							</View>
+							<RenderPickerView type={type} />
 						</View>
-						<RenderPickerView type={type} />
-					</View>
-				</BottomSheetModal>
-			</View>
+					</BottomSheetModal>
+				</View>
 			</TouchableWithoutFeedback>
 		</BottomSheetModalProvider>
 	)
