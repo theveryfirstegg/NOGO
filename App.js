@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { View } from 'react-native'
 import settings from './utils/settings.json'
-import MainScreen from './screens/MainScreen'
+import AddTicketScreen from './screens/AddTicketScreen'
 import LogInScreen from './screens/LogInScreen'
 import SuccessScreen from './screens/SuccessScreen'
 import SplashSwapScreen from './screens/SplashSwapScreen'
@@ -56,7 +56,7 @@ const App = () => {
 							options={{animation: 'fade'}}
 						/>
 						<Stack.Screen name="Main"
-							component={MainScreen}
+							component={AddTicketScreen}
 							options={{
 								...settings.screenOptions,
 								title: 'Add Ticket',

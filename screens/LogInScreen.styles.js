@@ -6,6 +6,7 @@ export default StyleSheet.create({
 		justifyContent: 'flex-start',
 		alignItems: 'center',
 		backgroundColor: '#ffd401',
+		paddingHorizontal: 20,
 	},
 
 	loginTitle: {
@@ -40,6 +41,8 @@ export default StyleSheet.create({
 		backgroundColor: '#ffffff',
 		color: 'black',
 		marginBottom: 15,
+		fontSize: 18,
+		fontWeight: '600',
 	},
 
 	passwordInput: {
@@ -61,8 +64,6 @@ export default StyleSheet.create({
 		position: 'absolute',
 		right: 15,
 		top: 14,
-		width: 35,
-		height: 20,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -70,5 +71,19 @@ export default StyleSheet.create({
 	forgotPassword: {
 		fontWeight: '600',
 		fontSize: 18,
+	},
+	errorContainer: {
+		alignSelf: 'flex-start',
+		paddingHorizontal: 20,
+		paddingVertical: 10,
+		backgroundColor: 'red',
+		width: '100%',
+		borderRadius: 7,
+		marginBottom: 15,
+	},
+	errorText: {
+		fontFamily: 'bold',
+		fontSize: 16,
+		color: 'white',
 	},
 })

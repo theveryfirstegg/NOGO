@@ -7,46 +7,61 @@ import {
 	Keyboard,
 } from 'react-native'
 import { useState } from 'react'
-import store from '../utils/store'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { useTheme } from '@react-navigation/native'
+import Icons from '@expo/vector-icons/FontAwesome5'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import styles from './LogInScreen.styles'
-import users from '../data/proxy/users.json'
+import { auth } from '../services/firebase'
+import UiTextInput from '../components/UiTextInput'
 
 const LogInScreen = ({ navigation }) => {
+	const { colors: theme } = useTheme()
 	const [userName, setUserName] = useState('')
 	const [userPassword, setPassword] = useState('')
 	const [hidePassword, setHidePassword] = useState(true)
+	const [error, setError] = useState(false)
+
+	const hidePasswordIcon = hidePassword ? 'eye' : 'eye-slash'
 
 	const handleShowPassword = () => {
 		setHidePassword(!hidePassword)
 	}
 
-	const handleLogIn = () => {
-		const found = users.find(
-			(element) =>
-				element.username === userName && element.password === userPassword
-		)
-
-		if (found) {
-		    store.set('user', found).then(() => {
-			    navigation.navigate('Tab')
-			})
-		}
+	const handleLogIn = async () => {
+		await signInWithEmailAndPassword(auth, userName, userPassword).then((user) => {
+			setError(false)
+			navigation.navigate('Tab')
+		}).catch((error) => {
+			setError(true)
+			// console.log(error)
+		})
 	}
 
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<View style={styles.container}>
 				<Text style={styles.loginTitle}>Log In</Text>
+                
+				{error && (
+					<Animated.View
+						entering={FadeIn} 
+						exiting={FadeOut} 
+						style={styles.errorContainer}>
+						<Text style={styles.errorText}>
+                            Invalid email or password
+						</Text>
+					</Animated.View>
+				)}
 
-				<TextInput
-					style={styles.input}
+				<UiTextInput
 					placeholder="Email"
 					onChangeText={setUserName}
 					autoCapitalize="none"
 				/>
+                
 				<View style={styles.passwordContainer}>
-					<TextInput
-						style={styles.passwordInput}
+					<UiTextInput
 						placeholder="Password"
 						onChangeText={setPassword}
 						secureTextEntry={hidePassword}
@@ -57,9 +72,7 @@ const LogInScreen = ({ navigation }) => {
 						style={styles.showButton}
 						onPress={handleShowPassword}
 					>
-						<Text style={{ fontWeight: 600 }}>
-							{hidePassword ? 'Show' : 'Hide'}
-						</Text>
+						<Icons name={hidePasswordIcon} size={20} color={theme.text} />
 					</TouchableOpacity>
 				</View>
 

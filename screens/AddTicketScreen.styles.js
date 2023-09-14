@@ -6,7 +6,26 @@ export default StyleSheet.create({
 		marginTop: 10,
 		justifyContent: 'flex-start',
 		alignItems: 'center',
-		backgroundColor: '#ffd401',
+	},
+	innerContainer: {
+		width: '100%',
+		height: '100%',
+		paddingHorizontal: 20,
+	},
+	dateContainer: {
+		marginTop: 10,
+		marginBottom: 20,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	dateIconContainer: {
+		marginRight: 6,
+	},
+	dateText: {
+		fontFamily: 'bold',
+		fontSize: 18,
+		color: 'black',
+		marginRight: 20,
 	},
 	sheetHandle: {
 		backgroundColor: 'red',
@@ -23,7 +42,6 @@ export default StyleSheet.create({
 	innerContainerSheetHeader: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
-		// backgroundColor: 'red',
 		paddingVertical: 10,
 		paddingHorizontal: 10,
 		top: -4,
@@ -39,17 +57,6 @@ export default StyleSheet.create({
 		fontWeight: 'bold',
 		fontSize: 18,
 		color: 'white',
-	},
-
-	input: {
-		width: 350,
-		height: 50,
-		padding: 12,
-		borderRadius: 7,
-		backgroundColor: '#ffffff',
-		color: 'black',
-		fontSize: 18,
-		marginBottom: 15,
 	},
 
 	mainScreenTitle: {

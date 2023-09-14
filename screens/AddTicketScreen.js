@@ -1,15 +1,14 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-mixed-spaces-and-tabs */
 import {
 	Text,
 	View,
-	TextInput,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	Keyboard
 } from 'react-native'
 import { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react'
 import dayjs from 'dayjs'
+import Icons from '@expo/vector-icons/FontAwesome5'
 import WheelPicker from 'react-native-wheely'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {
@@ -17,26 +16,30 @@ import {
 	BottomSheetModalProvider,
 	BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet'
-import styles from './MainScreen.styles'
+import { useTheme } from '@react-navigation/native'
+import styles from './AddTicketScreen.styles'
 import states from '../data/states.json'
 import cars from '../data/cars.json'
 import locations from '../data/locations.json'
 import CloseButton from '../components/CloseButton'
+import UiTextInput from '../components/UiTextInput'
+import UiButton from '../components/UiButton'
 
-const MainScreen = ({ navigation }) => {
+const AddTicketScreen = ({ navigation }) => {
+	const { colors: theme } = useTheme()
 	const bottomSheetModalRef = useRef(null)
 	const [type, setType] = useState('location')
 	const [option, setOption] = useState({
 		location: { current: 0, value: 0 },
-		date: { current: new Date(), value: new Date() },
+		// date: { current: new Date(), value: new Date() },
 		make: { current: 0, value: 0 },
 		model: { current: 0, value: 0 },
-		state: { current: 0, value: states.findIndex((elem) => elem === 'Tennessee') },
+		state: { current: 0, value: states.findIndex((elem) => elem === 'Tennessee') }, 
 		plate: { current: '', value: '' },
 		color: { current: '', value: '' }
 	})
 
-	const datetime = useMemo(() => dayjs(option.date.value).format('MMMM D, YYYY @h:mm A'), [option.date.value])
+	// const datetime = useMemo(() => dayjs(option.date.value).format('MMMM D, YYYY @h:mm A'), [option.date.value])
 
 	const carMakes = useMemo(() => cars.map((elem) => elem.brand), [])
 
@@ -176,72 +179,89 @@ const MainScreen = ({ navigation }) => {
 		<BottomSheetModalProvider>
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 				<View style={styles.container}>
-					{/* <Text style={styles.mainScreenTitle}>Vehicle Details</Text> */}
-					<TextInput
-						value={locations[option.location.value]}
-						style={styles.input}
-						placeholder="Location"
-						readOnly
-						onPressIn={() => handlePresentModal('location')}
-					/>
-		
-					<TextInput
-						value={datetime}
-						style={styles.input}
-						placeholder="Date/time"
-						readOnly
-						onPressIn={() => handlePresentModal('date')}
-					/>
+					<View style={styles.innerContainer}>
+						<View style={styles.dateContainer}>
+							<View style={styles.dateIconContainer}>
+								<Icons name="calendar" size={20} color={theme.text} />
+							</View>
+							<Text style={styles.dateText}>
+								{dayjs().format('MMMM D, YYYY')}
+							</Text>
+							<View style={styles.dateIconContainer}>
+								<Icons name="clock" size={20} color={theme.text} />
+							</View>
+							<Text style={styles.dateText}>
+								{dayjs().format('h:mm A')}
+							</Text>
+						</View>
+
+						<UiTextInput
+							value={locations[option.location.value]}
+							placeholder="Location"
+							readOnly
+							onPressIn={() => handlePresentModal('location')}
+						/>
+						{/* 
+						<UiTextInput
+							value={datetime}
+							style={styles.input}
+							placeholder="Date/time"
+							readOnly
+							onPressIn={() => handlePresentModal('date')}
+						/> */}
 	
-					<TextInput
-						value={carMakes[option.make.value]}
-						style={styles.input}
-						placeholder="Make"
-						readOnly
-						onPressIn={() => handlePresentModal('make')}
-					/>
-					<TextInput
-						value={carModelsValue[option.model.value]}
-						style={styles.input}
-						placeholder="Model"
-						readOnly
-						onPressIn={() => handlePresentModal('model')}
+						<UiTextInput
+							value={carMakes[option.make.value]}
+							style={styles.input}
+							placeholder="Make"
+							readOnly
+							onPressIn={() => handlePresentModal('make')}
+						/>
+
+						<UiTextInput
+							value={carModelsValue[option.model.value]}
+							style={styles.input}
+							placeholder="Model"
+							readOnly
+							onPressIn={() => handlePresentModal('model')}
 					
-					/>
+						/>
 				
-					<TextInput
-						style={styles.input}
-						placeholder="Color"
-						value={option.color.value}
-						onChangeText={(value) => updateOption(value, 'value', 'color')}
-					/>
+						<UiTextInput
+							style={styles.input}
+							placeholder="Color"
+							value={option.color.value}
+							onChangeText={(value) => updateOption(value, 'value', 'color')}
+						/>
 
-					<TextInput
-						value={states[option.state.value]}
-						style={styles.input}
-						placeholder="State"
-						readOnly
-						onPressIn={() => handlePresentModal('state')}
-					/>
-					<TextInput
-						style={styles.input}
-						value={option.plate.value}
-						onChangeText={(value) => updateOption(value, 'value', 'plate')}
-						placeholder="License Plate"
-					/>
+						<UiTextInput
+							value={states[option.state.value]}
+							style={styles.input}
+							placeholder="State"
+							readOnly
+							onPressIn={() => handlePresentModal('state')}
+						/>
 
-					<TouchableOpacity
-						style={[styles.submitButton,
-							!isReadyToSubmit && styles.submitButtonDisabled
-						]}
-						disabled={!isReadyToSubmit}
-						onPress={() => { navigation.navigate('Success')}}
-					>
-						<Text style={[
-							styles.submitText,
-							!isReadyToSubmit && styles.submitTextDisabled
-						]}>Submit</Text>
-					</TouchableOpacity>
+						<UiTextInput
+							style={styles.input}
+							value={option.plate.value}
+							onChangeText={(value) => updateOption(value, 'value', 'plate')}
+							placeholder="License Plate"
+						/>
+
+						<UiButton
+							text="Submit"
+							textStyle={[
+								styles.submitText,
+								!isReadyToSubmit && styles.submitTextDisabled
+							]}
+							style={[styles.submitButton,
+								!isReadyToSubmit && styles.submitButtonDisabled
+							]}
+							disabled={!isReadyToSubmit}
+							onPress={() => { navigation.navigate('Success')}}
+						/>
+					</View>
 
 					<BottomSheetModal
 						ref={bottomSheetModalRef}
@@ -271,4 +291,4 @@ const MainScreen = ({ navigation }) => {
 	)
 }
 
-export default MainScreen
+export default AddTicketScreen
