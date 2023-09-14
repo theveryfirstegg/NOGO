@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useTheme } from '@react-navigation/native'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Icons from '@expo/vector-icons/FontAwesome5'
 import TicketsScreen from './TicketsScreen'
 import settings from '../utils/settings.json'
@@ -27,7 +26,7 @@ function MyTabBar({ state, descriptors, navigation }) {
 							<View style={styles.tabMain}>
 								<TouchableOpacity
 									activeOpacity={0.8}
-						            onPress={() => navigation.navigate('Main')}
+						            onPress={() => navigation.navigate('AddTicket')}
 									style={styles.tabMainInner}>
 									<Icons name="car" size={30} color={theme.background} />
 								</TouchableOpacity>

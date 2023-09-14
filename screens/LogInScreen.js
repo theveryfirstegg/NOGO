@@ -1,7 +1,6 @@
 import {
 	Text,
 	View,
-	TextInput,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	Keyboard,
@@ -29,12 +28,11 @@ const LogInScreen = ({ navigation }) => {
 	}
 
 	const handleLogIn = async () => {
-		await signInWithEmailAndPassword(auth, userName, userPassword).then((user) => {
+		await signInWithEmailAndPassword(auth, userName, userPassword).then(() => {
 			setError(false)
 			navigation.navigate('Tab')
-		}).catch((error) => {
+		}).catch(() => {
 			setError(true)
-			// console.log(error)
 		})
 	}
 

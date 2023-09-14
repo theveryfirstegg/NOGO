@@ -10,7 +10,6 @@ const SplashSwapScreen = ({ navigation }) => {
 	useEffect(() => {
 		
 		setTimeout(() => {
-			console.log('auth.currentUser::', auth.currentUser)
 			const goto = auth.currentUser ? 'Tab' : 'LogIn'
 			opacity.value = withDelay(100, withTiming(1, {duration: 500}))
 			navigation.navigate(goto)

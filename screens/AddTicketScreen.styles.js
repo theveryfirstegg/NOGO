@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		marginTop: 10,
+		marginTop: 20,
 		justifyContent: 'flex-start',
 		alignItems: 'center',
 	},
@@ -17,6 +17,7 @@ export default StyleSheet.create({
 		marginBottom: 20,
 		flexDirection: 'row',
 		alignItems: 'center',
+		alignSelf: 'center',
 	},
 	dateIconContainer: {
 		marginRight: 6,
@@ -91,12 +92,14 @@ export default StyleSheet.create({
 	},
 
 	submitButton: {
-		width: 340,
+		width: '100%',
 		height: 52,
 		justifyContent: 'center',
 		backgroundColor: 'black',
 		borderRadius: 30,
-		marginTop: 170,
+		position: 'absolute',
+		alignSelf: 'center',
+		bottom: 40,
 	},
 
 	submitButtonDisabled: {

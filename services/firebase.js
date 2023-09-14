@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 import { initializeApp, getApp, getApps } from 'firebase/app'
 import { initializeAuth, getReactNativePersistence, getAuth, connectAuthEmulator } from 'firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -36,6 +37,7 @@ if(!getApps().length) {
 	auth = getAuth(app)
 }
 
+// eslint-disable-next-line no-undef
 if (__DEV__) {
 	connectAuthEmulator(auth, 'http://192.168.86.153:9099', { disableWarnings: true })
 }

@@ -11,6 +11,7 @@ import SuccessScreen from './screens/SuccessScreen'
 import SplashSwapScreen from './screens/SplashSwapScreen'
 import TabScreen from './screens/TabScreen'
 import useCachedResources from './utils/useCachedResources'
+import UiHeader from './components/UiHeader'
 
 const theme = {
 	...DefaultTheme,
@@ -55,10 +56,11 @@ const App = () => {
 							component={TabScreen}
 							options={{animation: 'fade'}}
 						/>
-						<Stack.Screen name="Main"
+						<Stack.Screen name="AddTicket"
 							component={AddTicketScreen}
 							options={{
 								...settings.screenOptions,
+								headerTitle: (props) => <UiHeader {...props} />,
 								title: 'Add Ticket',
 								presentation: 'modal',
 							}} 
