@@ -4,7 +4,8 @@ import {
 	View,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
-	Keyboard
+	Keyboard,
+	ScrollView
 } from 'react-native'
 import { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react'
 import dayjs from 'dayjs'
@@ -180,28 +181,30 @@ const AddTicketScreen = ({ navigation }) => {
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 				<View style={styles.container}>
 					<View style={styles.innerContainer}>
-						<View style={styles.dateContainer}>
-							<View style={styles.dateIconContainer}>
-								<Icons name="calendar" size={20} color={theme.text} />
+						<View style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+							<View style={styles.dateContainer}>
+								<View style={styles.dateIconContainer}>
+									<Icons name="calendar" size={20} color={theme.text} />
+								</View>
+								<Text style={styles.dateText}>
+									{dayjs().format('MMMM D, YYYY')}
+								</Text>
+								<View style={styles.dateIconContainer}>
+									<Icons name="clock" size={20} color={theme.text} />
+								</View>
+								<Text style={styles.dateText}>
+									{dayjs().format('h:mm A')}
+								</Text>
 							</View>
-							<Text style={styles.dateText}>
-								{dayjs().format('MMMM D, YYYY')}
-							</Text>
-							<View style={styles.dateIconContainer}>
-								<Icons name="clock" size={20} color={theme.text} />
-							</View>
-							<Text style={styles.dateText}>
-								{dayjs().format('h:mm A')}
-							</Text>
-						</View>
 
-						<UiTextInput
-							value={locations[option.location.value]}
-							placeholder="Location"
-							readOnly
-							onPressIn={() => handlePresentModal('location')}
-						/>
-						{/* 
+							<UiTextInput
+								// label="Location"
+								value={locations[option.location.value]}
+								placeholder="Location"
+								readOnly
+								onPressIn={() => handlePresentModal('location')}
+							/>
+							{/* 
 						<UiTextInput
 							value={datetime}
 							style={styles.input}
@@ -210,54 +213,57 @@ const AddTicketScreen = ({ navigation }) => {
 							onPressIn={() => handlePresentModal('date')}
 						/> */}
 	
-						<UiTextInput
-							value={carMakes[option.make.value]}
-							style={styles.input}
-							placeholder="Make"
-							readOnly
-							onPressIn={() => handlePresentModal('make')}
-						/>
+							<UiTextInput
+								// label="Make"
+								value={carMakes[option.make.value]}
+								style={styles.input}
+								placeholder="Make"
+								readOnly
+								onPressIn={() => handlePresentModal('make')}
+							/>
 
-						<UiTextInput
-							value={carModelsValue[option.model.value]}
-							style={styles.input}
-							placeholder="Model"
-							readOnly
-							onPressIn={() => handlePresentModal('model')}
+							<UiTextInput
+								// label="Model"
+								value={carModelsValue[option.model.value]}
+								style={styles.input}
+								placeholder="Model"
+								readOnly
+								onPressIn={() => handlePresentModal('model')}
 					
-						/>
+							/>
 				
-						<UiTextInput
-							style={styles.input}
-							placeholder="Color"
-							value={option.color.value}
-							onChangeText={(value) => updateOption(value, 'value', 'color')}
-						/>
+							<UiTextInput
+								// label="Color"
+								style={styles.input}
+								placeholder="Color"
+								value={option.color.value}
+								onChangeText={(value) => updateOption(value, 'value', 'color')}
+							/>
 
-						<UiTextInput
-							value={states[option.state.value]}
-							style={styles.input}
-							placeholder="State"
-							readOnly
-							onPressIn={() => handlePresentModal('state')}
-						/>
+							<UiTextInput
+								// label="State"
+								value={states[option.state.value]}
+								style={styles.input}
+								placeholder="State"
+								readOnly
+								onPressIn={() => handlePresentModal('state')}
+							/>
 
-						<UiTextInput
-							style={styles.input}
-							value={option.plate.value}
-							onChangeText={(value) => updateOption(value, 'value', 'plate')}
-							placeholder="License Plate"
-						/>
-
+							<UiTextInput
+								// label="License Plate Number"
+								style={styles.input}
+								value={option.plate.value}
+								onChangeText={(value) => updateOption(value, 'value', 'plate')}
+								placeholder="License Plate"
+							/>
+						
+						</View>
+					</View>
+					<View style={styles.footer}>
 						<UiButton
 							text="Submit"
-							textStyle={[
-								styles.submitText,
-								!isReadyToSubmit && styles.submitTextDisabled
-							]}
-							style={[styles.submitButton,
-								!isReadyToSubmit && styles.submitButtonDisabled
-							]}
+							textStyle={!isReadyToSubmit && styles.submitTextDisabled}
+							style={!isReadyToSubmit && styles.submitButtonDisabled}
 							disabled={!isReadyToSubmit}
 							onPress={() => { navigation.navigate('Success')}}
 						/>

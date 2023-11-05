@@ -1,5 +1,8 @@
 import { Dimensions, StyleSheet } from 'react-native'
 
+const { height } = Dimensions.get('window')
+const scrollHeight = height - 52 - 90 - 40 - 52
+
 export default StyleSheet.create({
 	container: {
 		flex: 1,
@@ -9,8 +12,13 @@ export default StyleSheet.create({
 	},
 	innerContainer: {
 		width: '100%',
-		height: '100%',
+		height: scrollHeight,
+		// backgroundColor: 'red',
 		paddingHorizontal: 20,
+	},
+	scrollContainer: {
+		flex: 1,
+		width: '100%',
 	},
 	dateContainer: {
 		marginTop: 10,
@@ -84,22 +92,20 @@ export default StyleSheet.create({
 		fontSize: 18,
 	},
 
-	submitText: {
-		color: 'white',
-		fontWeight: '700',
-		fontSize: 18,
-		textAlign: 'center',
-	},
-
-	submitButton: {
+	footer: {
 		width: '100%',
 		height: 52,
-		justifyContent: 'center',
-		backgroundColor: 'black',
-		borderRadius: 30,
 		position: 'absolute',
 		alignSelf: 'center',
 		bottom: 40,
+		paddingHorizontal: 20,
+	},
+
+	submitText: {
+	},
+
+	submitButton: {
+		
 	},
 
 	submitButtonDisabled: {
